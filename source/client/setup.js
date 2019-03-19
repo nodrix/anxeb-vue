@@ -34,6 +34,8 @@ anxeb.vue.init = function () {
 
 		if (typeof obj === 'function') {
 			settings.methods[dep] = obj;
+		} else {
+			settings.data[dep] = obj
 		}
 	}
 
@@ -43,7 +45,7 @@ anxeb.vue.init = function () {
 		var broad = function (childs) {
 			for (var i = 0; i < childs.length; i++) {
 				var component = childs[i];
-				if (component.$options.name === name) {
+				if (component.$options.name === name || component.$vnode.data.ref === name) {
 					if (callback(component) === false) {
 						return false;
 					}
@@ -216,7 +218,25 @@ anxeb.vue.scope = function (name, params) {
 
 	_self.page = new anxeb.vue.page(_self);
 
-	_self.setup = function (params) {
+
+	var setupEvent = function (params, componentEvent, scopeEvent) {
+		var allEvents = [function () {
+			if (anxeb.vue.root[scopeEvent]) {
+				anxeb.vue.root[scopeEvent](this)
+			}
+		}];
+
+		var userEvents = params[componentEvent] || [];
+
+		if (userEvents instanceof Array) {
+			allEvents = allEvents.concat(userEvents);
+		} else {
+			allEvents.push(userEvents);
+		}
+		params[componentEvent] = allEvents;
+	};
+
+	_self.setup = function (params, events) {
 		if (!_self.params) {
 			_self.params = params || {};
 		}
@@ -224,6 +244,20 @@ anxeb.vue.scope = function (name, params) {
 		_self.params.name = params.key || _self.params.name || _self.name;
 		_self.params.template = params.template;
 		_self.params.inject = _self.params.inject || [];
+
+		if (events) {
+			setupEvent(_self.params, 'beforeCreate', 'onScopeBeforeCreate');
+			setupEvent(_self.params, 'created', 'onScopeCreated');
+			setupEvent(_self.params, 'beforeMount', 'onScopeBeforeMount');
+			setupEvent(_self.params, 'mounted', 'onScopeMounted');
+			setupEvent(_self.params, 'beforeUpdate', 'onScopeBeforeUpdate');
+			setupEvent(_self.params, 'updated', 'onScopeUpdated');
+			setupEvent(_self.params, 'activated', 'onScopeActivated');
+			setupEvent(_self.params, 'deactivated', 'onScopeDeactivated');
+			setupEvent(_self.params, 'beforeDestroy', 'onScopeBeforeDestroy');
+			setupEvent(_self.params, 'destroyed', 'onScopeDestroyed');
+			setupEvent(_self.params, 'errorCaptured', 'onScopeErrorCaptured');
+		}
 
 		for (var dep  in anxeb.vue.dependencies) {
 			_self.params.inject.push(dep);
@@ -407,14 +441,14 @@ anxeb.vue.retrieve = {
 		};
 
 		if (scope) {
-			scope.setup(params).send(resolve);
+			scope.setup(params, true).send(resolve);
 		} else {
 			var script = anxeb.vue.scripts[params.script];
 			if (script) {
 				script.fetch(function (data, loaded) {
 					var scope = anxeb.vue.scopes[params.name];
 					if (scope) {
-						scope.setup(params).send(resolve);
+						scope.setup(params, true).send(resolve);
 					} else {
 						anxeb.vue.log.warning('Scope [0] not found on script [1].', params.name, params.script);
 						resolveDefault();

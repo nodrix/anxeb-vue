@@ -46,6 +46,7 @@ module.exports = {
 		}
 
 		lines.push('\n<!-- Anxeb Vue.js Extension Setup -->');
+		lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, 'vue/globals.js') + '"></script>');
 		lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, 'vue/setup.js') + '"></script>');
 		lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, 'vue/config.js') + '"></script>');
 
@@ -57,6 +58,11 @@ module.exports = {
 				extension   : _self.settings.extension
 			}, '', true) + ');',
 			type    : 'application/javascript'
+		});
+
+		_self.service.routing.internal.bundle.include.content('vue/globals.js', {
+			path : require.resolve('./client/globals'),
+			type : 'application/javascript'
 		});
 
 		_self.service.routing.internal.bundle.include.content('vue/setup.js', {
@@ -82,9 +88,8 @@ module.exports = {
 			if (files.length) {
 				for (let s = 0; s < files.length; s++) {
 					let file = files[s];
-					let fullPath = utils.path.join(_self.settings.templates, file);
-					_self.service.routing.internal.bundle.include.content('vue/templates/' + file, {
-						path : fullPath,
+					_self.service.routing.internal.bundle.include.content('vue/templates/' + file.filePath, {
+						path : file.fullPath,
 						type : 'application/html'
 					});
 				}
@@ -106,13 +111,11 @@ module.exports = {
 
 				for (let s = 0; s < scopes.length; s++) {
 					let scope = scopes[s];
-					let fullPath = utils.path.join(_self.settings.scopes, scope);
-
-					_self.service.routing.internal.bundle.include.content('vue/scopes/' + scope, {
-						path : fullPath,
+					_self.service.routing.internal.bundle.include.content('vue/scopes/' + scope.filePath, {
+						path : scope.fullPath,
 						type : 'application/javascript'
 					});
-					scopeItems.push('anxeb.vue.include.script("' + scope + '");');
+					scopeItems.push('anxeb.vue.include.script("' + scope.filePath + '");');
 				}
 
 				_self.service.routing.internal.bundle.include.content('vue/scopes.js', {
@@ -131,14 +134,13 @@ module.exports = {
 
 				for (let s = 0; s < includes.length; s++) {
 					let include = includes[s];
-					let fullPath = utils.path.join(_self.settings.includes, include);
 
-					if (!_self.settings.scopes || !fullPath.startsWith(_self.settings.scopes)) {
-						_self.service.routing.internal.bundle.include.content('vue/includes/' + include, {
-							path : fullPath,
+					if (!_self.settings.scopes || !include.fullPath.startsWithAny(_self.settings.scopes)) {
+						_self.service.routing.internal.bundle.include.content('vue/includes/' + include.filePath, {
+							path : include.fullPath,
 							type : 'application/javascript'
 						});
-						lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, '/vue/includes/', include) + '"></script>');
+						lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, '/vue/includes/', include.filePath) + '"></script>');
 					}
 				}
 			}

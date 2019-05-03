@@ -180,9 +180,9 @@ anxeb.vue.page = function (scope) {
 	var _scope = scope;
 	var _router = anxeb.vue.router;
 
-	_self.navigate = function (params) {
+	_self.navigate = function (path, query) {
 		return new Promise(function (resolve, reject) {
-			_router.push(params, function () {
+			_router.push({ path : path, query : query }, function () {
 				resolve();
 			}, function (res) {
 				var err = res && res.response && res.response.data ? res.response.data : res;
@@ -282,6 +282,11 @@ anxeb.vue.scope = function (name, params) {
 anxeb.vue.include = {
 	root      : function (params) {
 		anxeb.vue.settings.root = params;
+	},
+	filter    : function (name, params) {
+		if (name && params) {
+			Vue.filter(name, params)
+		}
 	},
 	directive : function (name, params) {
 		if (name && params) {

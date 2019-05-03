@@ -6,7 +6,11 @@ const utils = {
 	data : {
 		copy   : function (obj) {
 			if (obj) {
-				return JSON.parse(JSON.stringify(obj));
+				if (obj instanceof Array) {
+					return obj.slice();
+				} else {
+					return JSON.parse(JSON.stringify(obj));
+				}
 			} else {
 				return null;
 			}

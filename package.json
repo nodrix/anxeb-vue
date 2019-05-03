@@ -1,6 +1,6 @@
 {
  "name": "anxeb.vue",
- "version": "0.0.2",
+ "version": "0.0.3",
  "description": "Anxeb Vue.js Framework",
  "main": "index.js",
  "scripts": {

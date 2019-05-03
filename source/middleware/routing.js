@@ -11,7 +11,7 @@ module.exports = {
 				let route = routes[r];
 				if (route.type !== 'action' && (!container || (container === route.container && !route.parent))) {
 					result.push({
-						name      : route.name,
+						name      : route.identifier,
 						path      : route.path,// === '/' ? '/_public' : route.path,//route.link.endsWith('/') ? route.link + route.name : route.link,
 						alias     : route.alias !== null ? route.alias : undefined,
 						component : 'anxeb.vue.retrieve.view(\'' + route.name + '\', \'' + route.view + '\', \'' + (route.$params.script || route.view) + '\')',

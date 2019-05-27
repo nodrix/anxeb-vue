@@ -260,7 +260,9 @@ anxeb.vue.scope = function (name, params) {
 		}
 
 		for (var dep  in anxeb.vue.dependencies) {
-			_self.params.inject.push(dep);
+			if (typeof _self.params.inject.push === 'function') {
+				_self.params.inject.push(dep);
+			}
 		}
 		return _self;
 	};

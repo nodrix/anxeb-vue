@@ -467,7 +467,7 @@ anxeb.vue.retrieve = {
 			}
 		}
 	},
-	view      : function (name, view, script) {
+	view      : function (name, view, script, scope) {
 		var key = view.replaceAll('/', '-');
 		return Vue.component(key, function (resolve, reject) {
 
@@ -477,8 +477,8 @@ anxeb.vue.retrieve = {
 			}).then(function (res) {
 				anxeb.vue.retrieve.component({
 					key      : key,
-					script   : script,
-					name     : view,
+					script   : script || view,
+					name     : scope || script || view,
 					template : res.data
 				}, resolve, reject);
 			}).catch(reject);

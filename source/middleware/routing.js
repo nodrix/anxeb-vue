@@ -10,13 +10,25 @@ module.exports = {
 			for (let r in routes) {
 				let route = routes[r];
 				if (route.type !== 'action' && (!container || (container === route.container && !route.parent))) {
-					result.push({
+					let params = {
 						name      : route.identifier,
 						path      : route.path,// === '/' ? '/_public' : route.path,//route.link.endsWith('/') ? route.link + route.name : route.link,
 						alias     : route.alias !== null ? route.alias : undefined,
-						component : 'anxeb.vue.retrieve.view(\'' + route.name + '\', \'' + route.view + '\', \'' + (route.$params.script || route.view) + '\')',
+						component : 'anxeb.vue.retrieve.view(\'' + route.name + '\', \'' + route.view + '\'',
 						children  : pushRoutesFor(route.childs)
-					});
+					};
+
+					if (route.$params.script) {
+						params.component += ', \'' + route.$params.script + '\'';
+					}
+
+					if (route.$params.scope) {
+						params.component += ', \'' + route.$params.scope + '\'';
+					}
+
+					params.component += ')';
+
+					result.push(params);
 				}
 			}
 			return result;

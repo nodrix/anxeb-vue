@@ -292,7 +292,11 @@ anxeb.vue.include = {
 	},
 	directive : function (name, params) {
 		if (name && params) {
-			Vue.directive(name, params)
+			if (typeof params === 'function') {
+				Vue.directive(name, params(anxeb.vue.helpers));
+			} else {
+				Vue.directive(name, params)
+			}
 		}
 	},
 	factory   : function (name, params) {

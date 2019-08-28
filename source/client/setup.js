@@ -515,7 +515,7 @@ axios.interceptors.request.use(function (config) {
 });
 
 anxeb.vue.helpers = {
-	socket  : io(),
+	socket  : io,
 	axios   : axios,
 	jquery  : $,
 	log     : anxeb.vue.log,

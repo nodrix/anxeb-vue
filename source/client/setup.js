@@ -1,14 +1,14 @@
 anxeb = anxeb || {};
-anxeb.vue = anxeb.vue || {
-	scopes       : {},
-	scripts      : {},
-	helpers      : {},
-	dependencies : {},
-	services     : {},
-	factories    : {},
-	config       : function (settings) {
-		this.settings = settings;
-	}
+anxeb.vue = anxeb.vue || {};
+
+anxeb.vue.scopes = anxeb.vue.scopes || {};
+anxeb.vue.scripts = anxeb.vue.scripts || {};
+anxeb.vue.helpers = anxeb.vue.helpers || {};
+anxeb.vue.dependencies = anxeb.vue.dependencies || {};
+anxeb.vue.services = anxeb.vue.services || {};
+anxeb.vue.factories = anxeb.vue.factories || {};
+anxeb.vue.config = anxeb.vue.config || function (settings) {
+	this.settings = settings;
 };
 
 anxeb.vue.init = function () {
@@ -28,7 +28,7 @@ anxeb.vue.init = function () {
 		});
 	}
 
-	for (var dep  in anxeb.vue.dependencies) {
+	for (var dep in anxeb.vue.dependencies) {
 		var obj = anxeb.vue.dependencies[dep];
 		settings.provide[dep] = obj;
 
@@ -104,8 +104,16 @@ anxeb.vue.init = function () {
 	}
 
 	$(document).ready(function () {
+		if (anxeb.vue.beforeInit) {
+			anxeb.vue.beforeInit(settings);
+		}
+
 		anxeb.vue.root = new Vue(settings);
 		anxeb.vue.helpers.root = anxeb.vue.root;
+
+		if (anxeb.vue.afterInit) {
+			anxeb.vue.afterInit(anxeb.vue.root);
+		}
 	});
 };
 
@@ -259,7 +267,7 @@ anxeb.vue.scope = function (name, params) {
 			setupEvent(_self.params, 'errorCaptured', 'onScopeErrorCaptured');
 		}
 
-		for (var dep  in anxeb.vue.dependencies) {
+		for (var dep in anxeb.vue.dependencies) {
 			if (typeof _self.params.inject.push === 'function') {
 				_self.params.inject.push(dep);
 			}

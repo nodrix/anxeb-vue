@@ -1,28 +1,28 @@
 {
-  "name" : "anxeb-vue",
-  "version" : "1.0.0",
-  "description" : "Anxeb Vue.js Framework",
-  "main" : "index.js",
-  "repository" : {
-	"type" : "git",
-	"url" : "git+https://github.com/nodrix/anxeb-vue.git"
-  },
-  "keywords" : [
-	"Anxeb",
-	"Vue.js"
-  ],
-  "author" : "Eduardo Rosario <erosario@nodrix.com> (https://nodrix.com)",
-  "license" : "MIT",
-  "bugs" : {
-	"url" : "https://github.com/nodrix/anxeb-vue/issues"
-  },
-  "homepage" : "https://github.com/nodrix/anxeb-vue#readme",
-  "dependencies" : {
-	"axios" : "^0.18.1",
-	"jquery" : "^3.5.1",
-	"path" : "^0.12.7",
-	"socket.io-client" : "^2.3.0",
-	"vue" : "^2.6.11",
-	"vue-router" : "^3.1.6"
-  }
+ "name": "anxeb-vue",
+ "version": "1.0.1",
+ "description": "Anxeb Vue.js Framework",
+ "main": "index.js",
+ "repository": {
+  "type": "git",
+  "url": "git+https://github.com/nodrix/anxeb-vue.git"
+ },
+ "keywords": [
+  "Anxeb",
+  "Vue.js"
+ ],
+ "author": "Eduardo Rosario <erosario@nodrix.com> (https://nodrix.com)",
+ "license": "MIT",
+ "bugs": {
+  "url": "https://github.com/nodrix/anxeb-vue/issues"
+ },
+ "homepage": "https://github.com/nodrix/anxeb-vue#readme",
+ "dependencies": {
+  "axios": "^0.19.2",
+  "jquery": "^3.5.1",
+  "path": "^0.12.7",
+  "socket.io-client": "^2.3.0",
+  "vue": "^2.6.11",
+  "vue-router": "^3.3.4"
+ }
 }

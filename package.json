@@ -18,7 +18,7 @@
  },
  "homepage": "https://github.com/nodrix/anxeb-vue#readme",
  "dependencies": {
-  "axios": "^0.19.2",
+  "axios": "^0.21.1",
   "jquery": "^3.5.1",
   "path": "^0.12.7",
   "socket.io-client": "^2.3.0",

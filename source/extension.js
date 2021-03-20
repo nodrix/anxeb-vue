@@ -12,6 +12,7 @@ module.exports = {
 
 		if (_self.settings.includes) {
 			_self.service.parameters.fill(_self.settings, 'includes');
+			_self.service.parameters.fill(_self.settings, 'containers');
 			_self.service.parameters.fill(_self.settings, 'scopes');
 			_self.service.parameters.fill(_self.settings, 'root');
 			_self.service.parameters.fill(_self.settings, 'templates');
@@ -107,15 +108,16 @@ module.exports = {
 		if (_self.settings.scopes) {
 			let scopes = _self.service.fetch.files(_self.settings.scopes);
 			if (scopes.length) {
+				const path = 'scopes/';
 				let scopeItems = [];
 
 				for (let s = 0; s < scopes.length; s++) {
 					let scope = scopes[s];
-					_self.service.routing.internal.bundle.include.content('vue/scopes/' + scope.filePath, {
+					_self.service.routing.internal.bundle.include.content('vue/' + path + scope.filePath, {
 						path : scope.fullPath,
 						type : 'application/javascript'
 					});
-					scopeItems.push('anxeb.vue.include.script("' + scope.filePath + '");');
+					scopeItems.push('anxeb.vue.include.script("' + scope.filePath + '", "' + path + '");');
 				}
 
 				_self.service.routing.internal.bundle.include.content('vue/scopes.js', {
@@ -126,23 +128,49 @@ module.exports = {
 			}
 		}
 
+		if (_self.settings.containers) {
+			let containers = _self.service.fetch.files(_self.settings.containers);
+			if (containers.length) {
+				const path = 'containers/';
+				let containerItems = [];
+
+				for (let s = 0; s < containers.length; s++) {
+					let container = containers[s];
+					_self.service.routing.internal.bundle.include.content('vue/' + path + container.filePath, {
+						path : container.fullPath,
+						type : 'application/javascript'
+					});
+					containerItems.push('anxeb.vue.include.script("' + container.filePath + '", "' + path + '");');
+				}
+
+				_self.service.routing.internal.bundle.include.content('vue/containers.js', {
+					content : containerItems,
+					type    : 'application/javascript'
+				});
+				lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, '/vue/containers.js') + '"></script>');
+			}
+		}
+
 		if (_self.settings.includes) {
 			let includes = _self.service.fetch.files(_self.settings.includes);
-
 			if (includes.length) {
-				lines.push('\n<!-- Anxeb Vue.js Extension Includes -->');
+				const path = 'includes/';
+				let includeItems = [];
 
 				for (let s = 0; s < includes.length; s++) {
-					let include = includes[s];
-
-					if (!_self.settings.scopes || !include.fullPath.startsWithAny(_self.settings.scopes)) {
-						_self.service.routing.internal.bundle.include.content('vue/includes/' + include.filePath, {
-							path : include.fullPath,
-							type : 'application/javascript'
-						});
-						lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, '/vue/includes/', include.filePath) + '"></script>');
-					}
+					let scope = includes[s];
+					_self.service.routing.internal.bundle.include.content('vue/' + path + scope.filePath, {
+						path : scope.fullPath,
+						type : 'application/javascript'
+					});
+					includeItems.push('anxeb.vue.include.script("' + scope.filePath + '", "' + path + '");');
 				}
+
+				_self.service.routing.internal.bundle.include.content('vue/includes.js', {
+					content : includeItems,
+					type    : 'application/javascript'
+				});
+				lines.push('<script src="' + utils.path.join(_self.service.routing.internal.bundle.path, '/vue/includes.js') + '"></script>');
 			}
 		}
 
